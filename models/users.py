@@ -8,6 +8,8 @@ from sqlalchemy import (
 	PrimaryKeyConstraint
 )
 
+import bcrypt
+
 from db_initializer import Base
 
 
@@ -27,3 +29,14 @@ class User(Base):
 	def __repr__(self):
 		"""Returns string representation of model instance"""
 		return "<User {full_name!r}>".format(full_name=self.full_name)
+
+	@staticmethod
+	def hash_password(password) -> str:
+		"""Transforms password from it's raw textual form to 
+		cryptographic hashes
+		"""
+		return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+	def validate_password(self, password) -> bool:
+		"""Confirms password validity"""
+		return bcrypt.checkpw(password, self.hashed_password)
