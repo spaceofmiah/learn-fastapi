@@ -8,9 +8,12 @@ from sqlalchemy import (
 	PrimaryKeyConstraint
 )
 
+import jwt
 import bcrypt
 
 from db_initializer import Base
+
+import settings
 
 
 
@@ -39,4 +42,13 @@ class User(Base):
 
 	def validate_password(self, password) -> bool:
 		"""Confirms password validity"""
-		return bcrypt.checkpw(password, self.hashed_password)
+		return bcrypt.checkpw(password.encode(), self.hashed_password)
+
+	def generate_token(self) -> dict:
+		"""Generate access token for user"""
+		return {
+			"access_token": jwt.encode(
+				{"full_name": self.full_name, "email": self.email},
+				settings.SECRET_KEY
+			)
+		}
