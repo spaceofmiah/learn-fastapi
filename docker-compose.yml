@@ -21,6 +21,7 @@ services:
       - .:/home
     depends_on:
       - db
+    restart: always
     networks:
       - fastapiappnetwork
     environment:
