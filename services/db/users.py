@@ -16,4 +16,9 @@ def create_user(session:Session, user:CreateUserSchema):
 
 def list_users(session:Session):
 	return session.query(User).all()
+
+
+def get_user(session:Session, email:str):
+	return session.query(User).filter(User.email == email).one()
+	
 	
