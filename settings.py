@@ -9,3 +9,5 @@ DATABASE_URL = "postgresql+psycopg2://{username}:{password}@{host}:{port}/{db_na
 	password=os.getenv("POSTGRES_PASSWORD"),
 )
 
+
+SECRET_KEY = os.getenv("SECRET_KEY")
