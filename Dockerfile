@@ -6,10 +6,10 @@ WORKDIR		/home
 
 COPY		./requirements.txt .
 
-COPY 		* .
-
 RUN 		pip install -r requirements.txt \
 			&& adduser --disabled-password --no-create-home doe
+
+COPY 		* .
 
 USER 		doe
 

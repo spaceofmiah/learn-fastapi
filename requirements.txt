@@ -3,6 +3,8 @@ bcrypt==4.0.1
 pyjwt==2.6.0
 alembic>=1.9.1
 uvicorn==0.20.0
+cloudinary==1.31.0
 SQLAlchemy>=1.4,<=2.0
 psycopg2-binary==2.9.5
 email-validator>=1.0.3
+python-multipart==0.0.5
