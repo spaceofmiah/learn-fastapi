@@ -10,6 +10,8 @@ from fastapi import (
 	File,
 	Body
 )
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy.orm import Session
 
@@ -26,11 +28,12 @@ from schemas.users import (
 )
 
 app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
 @app.post('/login', response_model=Dict)
 def login(
-		payload: UserLoginSchema = Body(),
+		payload: OAuth2PasswordRequestForm = Depends(),
 		session: Session = Depends(get_db)
 	):
 	"""Processes user's authentication and returns a token
@@ -45,7 +48,7 @@ def login(
 	"""
 	try:
 		user:user_model.User = user_db_services.get_user(
-			session=session, email=payload.email
+			session=session, email=payload.username
 		)
 	except:
 		raise HTTPException(
@@ -73,8 +76,23 @@ def signup(
 	return user_db_services.create_user(session, user=payload)
 
 
+@app.get("/profile/{id}", response_model=UserSchema)
+def profile(
+	id:int, 
+	session:Session=Depends(get_db),
+	token: str = Depends(oauth2_scheme),
+):
+	"""Processes request to retrieve the requesting user
+	profile 
+	"""
+	return user_db_services.get_user_by_id(session=session, id=id)
+
+
 @app.post('/upload-profile-image', response_model=str)
-def upload_profile_image(file:UploadFile = File(description="User profile image")):
+def upload_profile_image(
+	# token: str = Depends(oauth2_scheme),
+	file:UploadFile = File(description="User profile image"),
+):
 	"""Processes request to upload profile image"""
 	# utilizes cloudinary to upload profile
 	# collect image url and save to db
