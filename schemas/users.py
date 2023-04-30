@@ -24,3 +24,7 @@ class UserSchema(UserBaseSchema):
 		orm_mode = True
 
 
+class UserImageSchema(BaseModel):
+	image: str
+
+
