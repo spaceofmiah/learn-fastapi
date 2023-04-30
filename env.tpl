@@ -1,0 +1,7 @@
+POSTGRES_DB=database_name
+POSTGRES_USER=database_user
+POSTGRES_PASSWORD=database_password
+POSTGRES_PORT=database_port
+POSTGRES_HOST=database_host
+SECRET_KEY=any_random_but_secret_string
+CLOUDINARY_URL='cloudinary://url-to-your-cloudinary-account'
