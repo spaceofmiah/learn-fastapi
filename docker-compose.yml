@@ -13,7 +13,7 @@ services:
       - fastapiappnetwork
 
   app:
-    image: fastapiapp
+    build: .
     container_name: fastapiapp_demoapp
     ports:
       - 8000:8000
