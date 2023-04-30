@@ -1,7 +1,9 @@
 from typing import Dict
+import base64
 
 from fastapi import (
 	status,
+	Request,
 
 	HTTPException, 
 	UploadFile, 
@@ -10,6 +12,8 @@ from fastapi import (
 	File,
 	Body
 )
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -24,12 +28,28 @@ from services.db import users as user_db_services
 from schemas.users import (
 	CreateUserSchema, 
 	UserLoginSchema,
+	UserImageSchema,
 	UserSchema
 )
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+
+@app.get("/home", response_class=HTMLResponse)
+def read_item(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
+@app.post("/ping", response_model=dict)
+def ping(payload:UserImageSchema):
+	data_split = payload.image.split('base64,')
+	encoded_data = data_split[1]
+	data = base64.b64decode(encoded_data)
+	with open("uploaded_image.png", "wb") as writer:
+		writer.write(data)
+
+	return {"detail": "Pong"}
 
 @app.post('/login', response_model=Dict)
 def login(
